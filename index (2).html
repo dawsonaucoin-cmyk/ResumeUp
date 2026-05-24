@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrganyAI — Structure organisationnelle par l'IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A0A0F;--paper:#F5F3EE;--cream:#EDEAD9;
+  --blue:#1438DC;--blue-mid:#2D52F5;--blue-light:#E8ECFF;
+  --red:#E8220A;--yellow:#F5C800;--green:#00C97A;
+  --white:#FFFFFF;--gray:#6B7280;--border:#D8D4C8;
+  --font-display:'Clash Display',sans-serif;
+  --font-body:'Bricolage Grotesque',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+.cursor{position:fixed;width:12px;height:12px;background:var(--blue);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--blue);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
+
+/* PAGE SYSTEM */
+.page{display:none}.page.active{display:block}
+
+/* ══════════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════════ */
+nav{position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:0;background:rgba(255,255,255,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.95);border-radius:100px;padding:.4rem .4rem .4rem 1.4rem;box-shadow:0 4px 24px rgba(10,10,15,.08),0 1px 2px rgba(10,10,15,.04);transition:box-shadow .3s,background .3s;white-space:nowrap}
+nav.scrolled{background:rgba(255,255,255,.97);box-shadow:0 8px 32px rgba(10,10,15,.12)}
+.nav-logo{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;cursor:none;margin-right:1.5rem;letter-spacing:-.02em}
+.nav-logo-dot{width:7px;height:7px;background:var(--blue);border-radius:50%;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:.1rem;margin-right:.6rem}
+.nav-links a{font-size:.82rem;color:var(--gray);text-decoration:none;font-weight:500;cursor:none;transition:color .15s,background .15s;padding:.38rem .8rem;border-radius:100px}
+.nav-links a:hover{color:var(--ink);background:rgba(10,10,15,.05)}
+.nav-divider{width:1px;height:16px;background:var(--border);margin:0 .4rem;flex-shrink:0}
+.nav-cta{background:var(--ink)!important;color:var(--white)!important;padding:.58rem 1.25rem!important;border-radius:100px!important;font-size:.82rem!important;font-weight:600!important;transition:background .15s,transform .15s!important;flex-shrink:0}
+.nav-cta:hover{background:#2a2a35!important;transform:scale(1.02)!important}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:6rem 3rem 3rem;gap:4rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 80% 40%,rgba(20,56,220,.07) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--blue-light);color:var(--blue);font-size:.78rem;font-weight:600;padding:.4rem 1rem;border-radius:100px;margin-bottom:1.8rem;letter-spacing:.04em;text-transform:uppercase;animation:fadeUp .7s ease both}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--blue);border-radius:50%;animation:pulse2 2s infinite}
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+h1.hero-title{font-family:var(--font-display);font-size:clamp(3rem,5vw,5rem);font-weight:700;line-height:1.0;letter-spacing:-.04em;margin-bottom:1.5rem;animation:fadeUp .7s .1s ease both}
+h1.hero-title em{font-style:normal;color:var(--blue);position:relative}
+h1.hero-title em::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--blue);border-radius:2px}
+.hero-sub{font-size:1.05rem;color:var(--gray);line-height:1.7;max-width:480px;margin-bottom:2.5rem;animation:fadeUp .7s .2s ease both}
+.hero-actions{display:flex;align-items:center;gap:1rem;animation:fadeUp .7s .3s ease both;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--white);font-family:var(--font-body);font-size:1rem;font-weight:600;padding:.9rem 2rem;border-radius:100px;text-decoration:none;border:none;cursor:none;transition:transform .15s,box-shadow .15s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(10,10,15,.2)}
+.btn-ghost{font-size:.95rem;color:var(--gray);text-decoration:none;font-weight:500;cursor:none;padding:.9rem 1.5rem;border-radius:100px;border:1.5px solid var(--border);transition:border-color .15s,color .15s}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);animation:fadeUp .7s .4s ease both}
+.stat-num{font-family:var(--font-display);font-size:2rem;font-weight:700;display:block;line-height:1}
+.stat-label{font-size:.78rem;color:var(--gray);font-weight:500;margin-top:4px;display:block}
+
+/* APP PREVIEW */
+.hero-right{animation:fadeUp .7s .2s ease both}
+.app-preview{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(10,10,15,.12);transform:perspective(1000px) rotateY(-4deg) rotateX(2deg);transition:transform .4s}
+.app-preview:hover{transform:perspective(1000px) rotateY(-1deg) rotateX(0)}
+.app-bar{background:var(--ink);padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem}
+.app-dot{width:10px;height:10px;border-radius:50%}
+.app-dot:nth-child(1){background:#FF5F56}.app-dot:nth-child(2){background:#FFBD2E}.app-dot:nth-child(3){background:#27C93F}
+.app-bar-title{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500;margin:0 auto;letter-spacing:.06em}
+.app-body{padding:1.5rem}
+.app-input-label{font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.app-input-box{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;font-size:.88rem;color:var(--ink);margin-bottom:1rem;line-height:1.5}
+.cursor-blink{display:inline-block;width:2px;height:.9em;background:var(--blue);animation:blink .8s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.app-generating{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--blue);font-weight:600;margin-bottom:1rem}
+.mini-spinner{width:14px;height:14px;border:2px solid var(--blue-light);border-top-color:var(--blue);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.app-result{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+.arc{border-radius:8px;padding:.75rem;font-size:.72rem}
+.arc.bl{background:var(--blue-light);border:1px solid #C0CAFF}.arc.rd{background:#FFF0EE;border:1px solid #FFCCC8}.arc.yw{background:#FFFAED;border:1px solid #FFE98A}
+.arc-title{font-weight:700;font-size:.75rem;margin-bottom:4px}
+.arc.bl .arc-title{color:var(--blue)}.arc.rd .arc-title{color:var(--red)}.arc.yw .arc-title{color:#A07000}
+.arc-task{color:var(--gray);line-height:1.4;margin-bottom:2px}
+.float-badge{position:absolute;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.6rem .9rem;font-size:.75rem;font-weight:600;color:var(--ink);box-shadow:0 8px 20px rgba(10,10,15,.08);white-space:nowrap;animation:float 4s ease-in-out infinite}
+.fb1{top:8%;right:-4%;animation-delay:0s}.fb2{bottom:18%;right:-6%;animation-delay:1.5s}.fb3{top:48%;left:-8%;animation-delay:.8s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.fb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+
+/* MARQUEE */
+.marquee-section{padding:1.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:var(--cream)}
+.marquee-track{display:flex;gap:2rem;animation:marquee 22s linear infinite;width:max-content}
+.marquee-item{display:flex;align-items:center;gap:.75rem;font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--gray);white-space:nowrap}
+.marquee-item span{color:var(--blue)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section.land{padding:5.5rem 3rem}
+.stag{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:.75rem}
+.stitle{font-family:var(--font-display);font-size:clamp(2rem,3.8vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem}
+.ssub{font-size:1rem;color:var(--gray);max-width:500px;line-height:1.7}
+
+/* HOW */
+.how-bg{background:var(--ink)}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+.step-card{position:relative;padding-top:4.5rem}
+.step-num{font-family:var(--font-display);font-size:3rem;font-weight:700;color:rgba(255,255,255,.05);line-height:1;margin-bottom:1rem}
+.step-icon{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.3rem;position:absolute;top:0;left:0}
+.step-title{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--white);margin-bottom:.4rem}
+.step-desc{font-size:.85rem;color:rgba(255,255,255,.45);line-height:1.6}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.feat-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:1.6rem;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(10,10,15,.08)}
+.feat-card:hover::before{transform:scaleX(1)}
+.feat-icon{width:42px;height:42px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem}
+.feat-title{font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:.4rem}
+.feat-desc{font-size:.85rem;color:var(--gray);line-height:1.6}
+.feat-pill{display:inline-block;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:100px;margin-top:.65rem}
+.pill-all{background:var(--blue-light);color:var(--blue)}.pill-pro{background:#FFF0EE;color:var(--red)}.pill-new{background:#F0FFF8;color:#007A48}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;align-items:start}
+.plan-card{border-radius:20px;padding:2.25rem;border:1.5px solid var(--border);background:var(--white);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.plan-card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(10,10,15,.1)}
+.plan-card.featured{background:var(--ink);border-color:var(--ink);transform:scale(1.03)}
+.plan-card.featured:hover{transform:scale(1.03) translateY(-4px)}
+.plan-badge{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:100px;background:var(--yellow);color:var(--ink);margin-bottom:1.1rem}
+.plan-name{font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:.25rem}
+.plan-card.featured .plan-name{color:var(--white)}
+.plan-desc{font-size:.85rem;color:var(--gray);margin-bottom:1.5rem;line-height:1.5}
+.plan-card.featured .plan-desc{color:rgba(255,255,255,.45)}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:1.5rem}
+.plan-amount{font-family:var(--font-display);font-size:2.8rem;font-weight:700;line-height:1;letter-spacing:-.04em}
+.plan-card.featured .plan-amount{color:var(--white)}
+.plan-period{font-size:.85rem;color:var(--gray)}.plan-card.featured .plan-period{color:rgba(255,255,255,.45)}
+.plan-feats{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.75rem}
+.plan-feat{display:flex;align-items:center;gap:.6rem;font-size:.87rem;color:var(--ink)}
+.plan-card.featured .plan-feat{color:rgba(255,255,255,.75)}
+.plan-feat::before{content:'✓';font-size:.8rem;font-weight:800;color:var(--green);flex-shrink:0}
+.plan-feat.no{opacity:.35}.plan-feat.no::before{content:'✕';color:var(--gray)}
+.plan-btn{display:block;width:100%;padding:.9rem;border-radius:100px;font-family:var(--font-body);font-size:.9rem;font-weight:600;text-align:center;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:none;transition:all .15s}
+.plan-btn:hover{background:var(--ink);color:var(--white)}
+.plan-card.featured .plan-btn{background:var(--white);color:var(--ink);border-color:var(--white)}
+.plan-card.featured .plan-btn:hover{background:var(--yellow);border-color:var(--yellow)}
+.pop-tag{position:absolute;top:1.25rem;right:1.25rem;font-size:.65rem;font-weight:700;color:var(--yellow);letter-spacing:.08em;text-transform:uppercase}
+
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.testi-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:1.6rem}
+.testi-stars{color:var(--yellow);font-size:.9rem;letter-spacing:2px;margin-bottom:.9rem}
+.testi-text{font-size:.88rem;line-height:1.7;color:var(--ink);margin-bottom:1.1rem;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:.65rem}
+.tav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--white);flex-shrink:0}
+.tname{font-size:.83rem;font-weight:600}.trole{font-size:.73rem;color:var(--gray)}
+
+/* CTA */
+.cta-section{background:var(--ink);padding:7rem 3rem;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(20,56,220,.3) 0%,transparent 70%);pointer-events:none}
+.cta-section::after{content:'OrganyAI';font-family:var(--font-display);font-size:18rem;font-weight:700;color:rgba(255,255,255,.02);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:-.05em}
+.cta-title{font-family:var(--font-display);font-size:clamp(2.5rem,4.5vw,4rem);font-weight:700;color:var(--white);letter-spacing:-.04em;line-height:1.05;margin-bottom:1.1rem;position:relative;z-index:1}
+.cta-title span{color:var(--yellow)}
+.cta-sub{font-size:1rem;color:rgba(255,255,255,.45);max-width:480px;margin:0 auto 2.5rem;line-height:1.7;position:relative;z-index:1}
+.cta-contacts{display:flex;align-items:center;justify-content:center;gap:2rem;margin-top:2.5rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.08);position:relative;z-index:1;flex-wrap:wrap}
+.contact-item{display:flex;align-items:center;gap:.65rem;color:rgba(255,255,255,.5);font-size:.88rem;text-decoration:none;transition:color .15s;cursor:none}
+.contact-item:hover{color:var(--white)}
+.contact-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:1.75rem 3rem;display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:rgba(255,255,255,.25)}
+.footer-copy{font-size:.75rem;color:rgba(255,255,255,.18)}
+
+/* ══════════════════════════════════════════
+   AUTH PAGES (LOGIN / SIGNUP)
+══════════════════════════════════════════ */
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden;padding:2rem}
+.auth-page::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(20,56,220,.25) 0%,transparent 70%);pointer-events:none}
+.auth-page::after{content:'OrganyAI';font-family:var(--font-display);font-size:22rem;font-weight:700;color:rgba(255,255,255,.018);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:-.05em}
+.auth-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:2.5rem;width:100%;max-width:420px;position:relative;z-index:1;backdrop-filter:blur(20px)}
+.auth-logo{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:.25rem;display:flex;align-items:center;gap:8px}
+.auth-logo-dot{width:9px;height:9px;background:var(--blue);border-radius:50%}
+.auth-tagline{font-size:.82rem;color:rgba(255,255,255,.35);margin-bottom:2rem}
+.auth-title{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--white);margin-bottom:.35rem}
+.auth-sub{font-size:.85rem;color:rgba(255,255,255,.4);margin-bottom:1.75rem}
+.auth-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);display:block;margin-bottom:.4rem}
+.auth-input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:.8rem 1rem;font-family:var(--font-body);font-size:.92rem;color:var(--white);outline:none;transition:border-color .15s;margin-bottom:1.1rem}
+.auth-input::placeholder{color:rgba(255,255,255,.2)}
+.auth-input:focus{border-color:var(--blue)}
+.auth-btn{width:100%;background:var(--blue);color:var(--white);font-family:var(--font-body);font-size:.95rem;font-weight:600;padding:.95rem;border-radius:100px;border:none;cursor:none;transition:transform .15s,box-shadow .15s,background .15s;margin-top:.5rem}
+.auth-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(20,56,220,.3)}
+.auth-btn:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.3);transform:none;box-shadow:none}
+.auth-switch{font-size:.83rem;color:rgba(255,255,255,.35);text-align:center;margin-top:1.25rem}
+.auth-switch a{color:var(--blue);text-decoration:none;font-weight:600;cursor:none}
+.auth-switch a:hover{text-decoration:underline}
+.auth-divider{display:flex;align-items:center;gap:.75rem;margin:.5rem 0 1.1rem}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;border-top:1px solid rgba(255,255,255,.08)}
+.auth-divider span{font-size:.72rem;color:rgba(255,255,255,.25);white-space:nowrap}
+.auth-error{background:rgba(232,34,10,.15);border:1px solid rgba(232,34,10,.3);border-radius:8px;padding:.7rem 1rem;font-size:.83rem;color:#FF8080;margin-bottom:1rem;display:none}
+.plan-selector{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
+.plan-opt{border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:1rem;cursor:none;transition:all .15s;text-align:center}
+.plan-opt:hover{border-color:rgba(255,255,255,.25)}
+.plan-opt.selected{border-color:var(--blue);background:rgba(20,56,220,.15)}
+.plan-opt-name{font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--white);margin-bottom:.2rem}
+.plan-opt-price{font-size:.8rem;color:rgba(255,255,255,.4)}
+.plan-opt.selected .plan-opt-price{color:var(--blue)}
+
+/* ══════════════════════════════════════════
+   APP (DASHBOARD) — SIDEBAR LAYOUT
+══════════════════════════════════════════ */
+.app-page{min-height:100vh;background:var(--paper);display:flex}
+
+/* FULL LEFT SIDEBAR */
+.app-sidebar{width:240px;flex-shrink:0;background:var(--ink);display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;overflow-y:auto}
+.sb-top{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--white);display:flex;align-items:center;gap:8px;letter-spacing:-.02em;margin-bottom:1.25rem}
+.sb-logo-dot{width:8px;height:8px;background:var(--blue);border-radius:50%;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:.65rem}
+.sb-avatar{width:34px;height:34px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--white);flex-shrink:0}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:.85rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-plan-chip{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:2px 7px;border-radius:100px;display:inline-block;margin-top:2px}
+.sb-chip-free{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.sb-chip-pro{background:rgba(20,56,220,.3);color:#88AAFF}
+
+.sb-nav{padding:1rem .75rem;flex:1}
+.sb-nav-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.25);padding:.25rem .5rem;margin-bottom:.3rem;margin-top:.75rem}
+.sb-nav-label:first-child{margin-top:0}
+.sb-nav-item{display:flex;align-items:center;gap:.65rem;padding:.55rem .65rem;border-radius:8px;cursor:none;transition:background .15s,color .15s;text-decoration:none;border:none;background:transparent;font-family:var(--font-body);width:100%;text-align:left}
+.sb-nav-item .sb-icon{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;transition:background .15s}
+.sb-nav-item .sb-label{font-size:.85rem;font-weight:500;color:rgba(255,255,255,.5);transition:color .15s}
+.sb-nav-item:hover .sb-label{color:rgba(255,255,255,.85)}
+.sb-nav-item:hover .sb-icon{background:rgba(255,255,255,.1)}
+.sb-nav-item.sb-active .sb-icon{background:var(--blue)}
+.sb-nav-item.sb-active .sb-label{color:var(--white);font-weight:600}
+
+.sb-new-btn{display:flex;align-items:center;gap:.6rem;width:calc(100% - 1.5rem);margin:.75rem .75rem 0;background:rgba(20,56,220,.25);border:1px solid rgba(20,56,220,.4);color:var(--white);font-family:var(--font-body);font-size:.83rem;font-weight:600;padding:.65rem .9rem;border-radius:10px;cursor:none;transition:background .15s,border-color .15s}
+.sb-new-btn:hover{background:rgba(20,56,220,.4);border-color:rgba(20,56,220,.6)}
+.sb-new-btn span{font-size:1rem;line-height:1}
+
+.sb-history-list{padding:0 .75rem;overflow-y:auto;flex:1}
+.sb-hist-item{padding:.5rem .65rem;border-radius:8px;cursor:none;transition:background .15s;margin-bottom:.1rem}
+.sb-hist-item:hover{background:rgba(255,255,255,.06)}
+.sb-hist-item.sb-hist-active{background:rgba(20,56,220,.2)}
+.sb-hist-name{font-size:.82rem;font-weight:500;color:rgba(255,255,255,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-hist-meta{font-size:.68rem;color:rgba(255,255,255,.25);margin-top:1px}
+.sb-hist-item.sb-hist-active .sb-hist-name{color:rgba(255,255,255,.9)}
+.sb-empty-hist{padding:1.5rem .65rem;font-size:.78rem;color:rgba(255,255,255,.2);text-align:center;line-height:1.5}
+
+.sb-bottom{padding:1rem .75rem;border-top:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:.4rem}
+.sb-upgrade-btn{display:flex;align-items:center;gap:.6rem;width:100%;background:linear-gradient(135deg,rgba(245,200,0,.15),rgba(245,200,0,.05));border:1px solid rgba(245,200,0,.25);color:var(--yellow);font-family:var(--font-body);font-size:.8rem;font-weight:600;padding:.6rem .85rem;border-radius:9px;cursor:none;transition:all .15s}
+.sb-upgrade-btn:hover{background:linear-gradient(135deg,rgba(245,200,0,.25),rgba(245,200,0,.1));border-color:rgba(245,200,0,.4)}
+.sb-upgrade-btn span{font-size:.9rem}
+.sb-logout-btn{display:flex;align-items:center;gap:.6rem;width:100%;background:transparent;border:none;color:rgba(255,255,255,.25);font-family:var(--font-body);font-size:.78rem;font-weight:500;padding:.5rem .65rem;border-radius:8px;cursor:none;transition:color .15s}
+.sb-logout-btn:hover{color:rgba(232,34,10,.7)}
+.sb-logout-btn span{font-size:.85rem}
+
+/* APP MAIN */
+.app-main{flex:1;overflow-y:auto;min-height:100vh}
+
+/* TOPBAR inside app main — minimal */
+.app-topbar{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.75rem;border-bottom:1px solid var(--border);background:var(--white);position:sticky;top:0;z-index:10}
+.app-topbar-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:.5rem}
+.app-topbar-breadcrumb{font-size:.78rem;color:var(--gray);display:flex;align-items:center;gap:.4rem}
+.app-topbar-breadcrumb span{color:var(--border)}
+
+/* remove old header styles that are no longer needed */
+.app-header{display:none}
+.app-header-logo,.app-header-dot,.app-nav-tabs,.app-tab,.app-header-right,.user-badge,.user-avatar,.plan-chip,.chip-free,.chip-pro,.upgrade-btn,.logout-btn{display:none}
+.app-body-wrap{display:contents}
+
+/* GENERATOR */
+.app-main{flex:1;overflow-y:auto}
+.gen-wrap{display:grid;grid-template-columns:340px 1fr;gap:0;min-height:calc(100vh - 49px)}
+.gen-form-panel{background:var(--cream);border-right:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:0;position:sticky;top:49px;height:calc(100vh - 49px);overflow-y:auto}
+.gen-form-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem;color:var(--ink)}
+.gf-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);display:block;margin-bottom:.4rem}
+.gf-input,.gf-textarea,.gf-select{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:.75rem .9rem;font-family:var(--font-body);font-size:.88rem;color:var(--ink);outline:none;transition:border-color .15s;margin-bottom:1.1rem}
+.gf-input:focus,.gf-textarea:focus,.gf-select:focus{border-color:var(--blue)}
+.gf-textarea{min-height:90px;resize:vertical;line-height:1.55}
+.gf-select{cursor:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;background-color:var(--white)}
+.gf-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.gen-btn{width:100%;background:var(--blue);color:var(--white);font-family:var(--font-body);font-size:.9rem;font-weight:600;padding:.85rem;border-radius:100px;border:none;cursor:none;transition:transform .15s,box-shadow .15s,background .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.5rem}
+.gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,56,220,.25)}
+.gen-btn:disabled{background:var(--border);color:var(--gray);transform:none;box-shadow:none}
+.gen-limit-notice{font-size:.7rem;color:var(--gray);text-align:center;margin-top:.6rem;line-height:1.4}
+.gen-limit-notice a{color:var(--blue);text-decoration:none;cursor:none;font-weight:600}
+
+/* sidebar-section-title kept for history section label */
+.sidebar-section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:.6rem;padding:0 .25rem}
+.history-item,.new-gen-btn,.empty-history,.hist-name,.hist-meta{display:none}
+
+/* OUTPUT PANEL */
+.gen-output-panel{padding:1.75rem;overflow-y:auto}
+.output-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;color:var(--gray);gap:.75rem}
+.output-empty-icon{font-size:3.5rem;opacity:.25}
+.output-empty-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--ink);opacity:.4}
+.output-empty-sub{font-size:.85rem;opacity:.5;max-width:280px;line-height:1.6}
+.output-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;gap:1.25rem}
+.loading-bar{width:220px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.loading-fill{height:100%;background:var(--blue);border-radius:2px;animation:lf 2.8s ease-in-out infinite}
+@keyframes lf{0%{width:0%}60%{width:82%}100%{width:100%}}
+.loading-msg{font-size:.85rem;color:var(--gray);font-weight:500}
+.output-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;flex-wrap:wrap}
+.output-title-block{}
+.output-dept-name{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--ink)}
+.output-summary{font-size:.85rem;color:var(--gray);margin-top:.25rem;line-height:1.5}
+.output-actions{display:flex;gap:.5rem;flex-shrink:0;flex-wrap:wrap}
+.act-btn{padding:.5rem 1rem;border-radius:8px;border:1.5px solid var(--border);background:var(--white);font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--gray);cursor:none;transition:all .15s;display:flex;align-items:center;gap:.4rem;white-space:nowrap}
+.act-btn:hover{border-color:var(--ink);color:var(--ink)}
+.act-btn.primary-act{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.act-btn.primary-act:hover{background:#222}
+
+/* ORG CHART */
+.org-chart-visual{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem}
+.org-chart-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:1.25rem}
+.org-tree{display:flex;flex-direction:column;align-items:center;gap:0}
+.org-node{display:flex;flex-direction:column;align-items:center;width:100%}
+.org-role-box{padding:.65rem 1.5rem;border-radius:10px;font-size:.85rem;font-weight:600;text-align:center;min-width:180px;max-width:280px;transition:transform .15s}
+.org-role-box:hover{transform:scale(1.02)}
+.org-conn-v{width:2px;height:20px;background:var(--border)}
+.org-conn-h-wrap{display:flex;align-items:flex-start}
+.org-children{display:flex;gap:1rem;align-items:flex-start}
+.org-child-col{display:flex;flex-direction:column;align-items:center}
+
+/* TASK CARDS */
+.roles-grid{display:flex;flex-direction:column;gap:1rem}
+.role-block{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.role-block-header{padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+.role-block-title{font-family:var(--font-display);font-size:1rem;font-weight:700}
+.role-block-level{font-size:.7rem;font-weight:600;padding:3px 9px;border-radius:100px}
+.role-tasks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border)}
+.role-cat{padding:.9rem 1.1rem;border-right:1px solid var(--border)}
+.role-cat:last-child{border-right:none}
+.role-cat-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.65rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.role-task-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.8rem;color:var(--ink);line-height:1.5;margin-bottom:.4rem}
+.role-task-item::before{content:'→';font-size:.7rem;margin-top:2px;flex-shrink:0;color:var(--blue)}
+
+/* UPGRADE MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,10,15,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);display:none}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--white);border-radius:20px;padding:2.25rem;max-width:400px;width:100%;text-align:center;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:none;color:var(--gray)}
+.modal-icon{font-size:2.5rem;margin-bottom:1rem}
+.modal-title{font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:.5rem}
+.modal-sub{font-size:.88rem;color:var(--gray);line-height:1.6;margin-bottom:1.5rem}
+.modal-price{font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:var(--blue);margin-bottom:1.5rem}
+.modal-price span{font-size:1rem;color:var(--gray);font-weight:400}
+.modal-btn{display:block;width:100%;background:var(--blue);color:var(--white);font-family:var(--font-body);font-size:.95rem;font-weight:600;padding:.9rem;border-radius:100px;border:none;cursor:none;transition:all .15s;text-align:center;margin-bottom:.75rem}
+.modal-btn:hover{background:var(--blue-mid);transform:translateY(-2px)}
+.modal-dismiss{font-size:.82rem;color:var(--gray);cursor:none;background:none;border:none;font-family:var(--font-body)}
+.modal-dismiss:hover{color:var(--ink)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:860px){.hero{grid-template-columns:1fr;padding:5rem 1.5rem 3rem}.hero-right{display:none}.steps-grid,.features-grid,.pricing-grid,.testi-grid{grid-template-columns:1fr}.gen-wrap{grid-template-columns:1fr}.app-sidebar{display:none}.gen-form-panel{border-right:none}section.land{padding:4rem 1.5rem}.nav-links a:not(.nav-cta){display:none}nav{padding:1rem 1.5rem}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- UPGRADE MODAL -->
+<div class="modal-overlay" id="upgrade-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon">⚡</div>
+    <div class="modal-title">Passez au plan Pro</div>
+    <div class="modal-sub">Vous avez atteint la limite de 3 générations du plan gratuit. Passez au Pro pour des générations illimitées et bien plus.</div>
+    <div class="modal-price">$5 <span>/ mois</span></div>
+    <button class="modal-btn" onclick="upgradeToPro()">Passer au Pro maintenant →</button>
+    <button class="modal-dismiss" onclick="closeModal()">Peut-être plus tard</button>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: LANDING ═══════ -->
+<div id="page-landing" class="page active">
+<nav id="navbar">
+  <a href="#" class="nav-logo" onclick="return false"><span class="nav-logo-dot"></span>OrganyAI</a>
+  <div class="nav-links">
+    <a href="#features-s">Fonctions</a>
+    <a href="#pricing-s">Tarifs</a>
+    <a href="#" onclick="showPage('login');return false">Connexion</a>
+  </div>
+  <div class="nav-divider"></div>
+  <a href="#" onclick="showPage('signup');return false" class="nav-cta">Commencer →</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">✦ Propulsé par Claude AI</div>
+    <h1 class="hero-title">Votre structure<br>organisationnelle<br><em>en secondes</em></h1>
+    <p class="hero-sub">Décrivez votre département. OrganyAI génère instantanément la hiérarchie complète, les descriptions de postes détaillées et les tâches — prêt à exporter.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="showPage('signup')">Commencer gratuitement <span>→</span></button>
+      <button class="btn-ghost" onclick="showPage('login')">Se connecter</button>
+    </div>
+    <div class="hero-stats">
+      <div><span class="stat-num">45+</span><span class="stat-label">Tâches / structure</span></div>
+      <div><span class="stat-num">FR/EN</span><span class="stat-label">Bilingue</span></div>
+      <div><span class="stat-num">30s</span><span class="stat-label">Temps de génération</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="position:relative">
+      <div class="float-badge fb1"><span class="fb-dot" style="background:var(--green)"></span>Structure générée ✓</div>
+      <div class="float-badge fb2"><span class="fb-dot" style="background:var(--yellow)"></span>Export PPTX prêt</div>
+      <div class="float-badge fb3"><span class="fb-dot" style="background:var(--red)"></span>15 tâches / poste</div>
+      <div class="app-preview">
+        <div class="app-bar"><div class="app-dot"></div><div class="app-dot"></div><div class="app-dot"></div><div class="app-bar-title">ORGANYAI — GÉNÉRATEUR</div></div>
+        <div class="app-body">
+          <div class="app-input-label">Département</div>
+          <div class="app-input-box">Relations Publiques — équipe de 3, secteur cosmétique<span class="cursor-blink"></span></div>
+          <div class="app-generating"><div class="mini-spinner"></div>Génération en cours…</div>
+          <div class="app-result">
+            <div class="arc bl"><div class="arc-title">Responsable RP</div><div class="arc-task">Stratégie & budget</div><div class="arc-task">Leadership équipe</div></div>
+            <div class="arc rd"><div class="arc-title">Spécialiste RP</div><div class="arc-task">Relations médias</div><div class="arc-task">Communiqués presse</div></div>
+            <div class="arc yw"><div class="arc-title">Coordonnatrice</div><div class="arc-task">Envois presse</div><div class="arc-task">Base de données</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>✦</span>Marketing & Communications</div><div class="marquee-item"><span>✦</span>Ressources Humaines</div><div class="marquee-item"><span>✦</span>Finance & Comptabilité</div><div class="marquee-item"><span>✦</span>Ventes & Développement</div><div class="marquee-item"><span>✦</span>Technologie & Digital</div><div class="marquee-item"><span>✦</span>Relations Publiques</div><div class="marquee-item"><span>✦</span>Service Client</div><div class="marquee-item"><span>✦</span>Opérations & Logistique</div>
+    <div class="marquee-item"><span>✦</span>Marketing & Communications</div><div class="marquee-item"><span>✦</span>Ressources Humaines</div><div class="marquee-item"><span>✦</span>Finance & Comptabilité</div><div class="marquee-item"><span>✦</span>Ventes & Développement</div><div class="marquee-item"><span>✦</span>Technologie & Digital</div><div class="marquee-item"><span>✦</span>Relations Publiques</div><div class="marquee-item"><span>✦</span>Service Client</div><div class="marquee-item"><span>✦</span>Opérations & Logistique</div>
+  </div>
+</div>
+
+<section class="land how-bg">
+  <div class="stag" style="color:var(--yellow)">Comment ça marche</div>
+  <div class="stitle" style="color:var(--white)">De la description<br>à la structure complète</div>
+  <div class="steps-grid">
+    <div class="step-card reveal"><div class="step-num">01</div><div class="step-icon">✍️</div><div class="step-title">Décrivez</div><div class="step-desc">Entrez le nom du département, l'industrie et une courte description. Quelques phrases suffisent.</div></div>
+    <div class="step-card reveal"><div class="step-num">02</div><div class="step-icon">🤖</div><div class="step-title">L'IA génère</div><div class="step-desc">Claude AI crée les postes, la hiérarchie et les descriptions de tâches adaptées à votre contexte.</div></div>
+    <div class="step-card reveal"><div class="step-num">03</div><div class="step-icon">✏️</div><div class="step-title">Personnalisez</div><div class="step-desc">Ajustez les tâches, les titres et les responsabilités selon votre réalité d'entreprise.</div></div>
+    <div class="step-card reveal"><div class="step-num">04</div><div class="step-icon">📤</div><div class="step-title">Exportez</div><div class="step-desc">Téléchargez en PowerPoint, Word ou PDF — prêt à présenter à votre direction.</div></div>
+  </div>
+</section>
+
+<section class="land" id="features-s">
+  <div class="stag">Fonctionnalités</div>
+  <div class="stitle">Tout ce dont vous<br>avez besoin</div>
+  <div class="features-grid">
+    <div class="feat-card reveal"><div class="feat-icon">🏗️</div><div class="feat-title">Structure hiérarchique visuelle</div><div class="feat-desc">Organigramme interactif généré automatiquement avec toutes les relations de reporting.</div><span class="feat-pill pill-all">Tous les plans</span></div>
+    <div class="feat-card reveal"><div class="feat-icon">📋</div><div class="feat-title">Descriptions de tâches détaillées</div><div class="feat-desc">15 tâches concrètes par poste, organisées par catégories et commençant par des verbes d'action.</div><span class="feat-pill pill-all">Tous les plans</span></div>
+    <div class="feat-card reveal"><div class="feat-icon">🌐</div><div class="feat-title">Bilingue Français & Anglais</div><div class="feat-desc">Générez dans les deux langues — parfait pour les entreprises canadiennes.</div><span class="feat-pill pill-all">Tous les plans</span></div>
+    <div class="feat-card reveal"><div class="feat-icon">📊</div><div class="feat-title">Export PowerPoint professionnel</div><div class="feat-desc">Présentation prête en un clic avec design premium et toutes les descriptions formatées.</div><span class="feat-pill pill-pro">Plan Pro</span></div>
+    <div class="feat-card reveal"><div class="feat-icon">🎯</div><div class="feat-title">KPIs & indicateurs de performance</div><div class="feat-desc">Génération automatique des indicateurs de succès pour chaque poste.</div><span class="feat-pill pill-pro">Plan Pro</span></div>
+    <div class="feat-card reveal"><div class="feat-icon">💾</div><div class="feat-title">Historique & sauvegarde</div><div class="feat-desc">Retrouvez toutes vos structures, comparez les versions et réutilisez vos templates.</div><span class="feat-pill pill-new">Illimité sur Pro</span></div>
+  </div>
+</section>
+
+<section class="land" id="pricing-s" style="background:var(--cream);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="stag">Tarifs</div>
+  <div class="stitle">Simple et transparent</div>
+  <div class="pricing-grid">
+    <div class="plan-card reveal">
+      <div class="plan-name">Gratuit</div>
+      <div class="plan-desc">Parfait pour découvrir OrganyAI.</div>
+      <div class="plan-price"><span class="plan-amount">$0</span></div>
+      <div class="plan-feats">
+        <div class="plan-feat">3 générations par mois</div>
+        <div class="plan-feat">Jusqu'à 3 postes</div>
+        <div class="plan-feat">Export texte</div>
+        <div class="plan-feat">Bilingue FR/EN</div>
+        <div class="plan-feat no">Export PowerPoint & Word</div>
+        <div class="plan-feat no">Historique illimité</div>
+      </div>
+      <button class="plan-btn" onclick="showPage('signup')">Commencer gratuitement</button>
+    </div>
+    <div class="plan-card featured reveal">
+      <div class="pop-tag">★ POPULAIRE</div>
+      <div class="plan-badge">Recommandé</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-desc">Pour les gestionnaires et consultants.</div>
+      <div class="plan-price"><span class="plan-amount">$5</span><span class="plan-period">/mois</span></div>
+      <div class="plan-feats">
+        <div class="plan-feat">Générations illimitées</div>
+        <div class="plan-feat">Jusqu'à 8 postes</div>
+        <div class="plan-feat">Export PowerPoint & Word</div>
+        <div class="plan-feat">Historique illimité</div>
+        <div class="plan-feat">KPIs & indicateurs</div>
+        <div class="plan-feat">Support prioritaire</div>
+      </div>
+      <button class="plan-btn" onclick="showSignupPro()">Essai gratuit 14 jours</button>
+    </div>
+    <div class="plan-card reveal">
+      <div class="plan-name">Entreprise</div>
+      <div class="plan-desc">Pour les équipes RH et cabinets conseil.</div>
+      <div class="plan-price"><span class="plan-amount">$49</span><span class="plan-period">/mois</span></div>
+      <div class="plan-feats">
+        <div class="plan-feat">Tout du plan Pro</div>
+        <div class="plan-feat">5 utilisateurs inclus</div>
+        <div class="plan-feat">Templates personnalisés</div>
+        <div class="plan-feat">Intégration SIRH</div>
+        <div class="plan-feat">Gestionnaire dédié</div>
+      </div>
+      <button class="plan-btn" onclick="showPage('signup')">Contacter l'équipe</button>
+    </div>
+  </div>
+</section>
+
+<section class="land" style="background:var(--paper)">
+  <div class="stag">Témoignages</div>
+  <div class="stitle">Ils nous font confiance</div>
+  <div class="testi-grid">
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><div class="testi-text">"Ce qui me prenait 2 jours se fait en 5 minutes. La qualité des descriptions est impressionnante — on dirait un consultant RH senior."</div><div class="testi-author"><div class="tav" style="background:var(--blue)">IR</div><div><div class="tname">Isabelle R.</div><div class="trole">Head of Communications, Groupe Clarins</div></div></div></div>
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><div class="testi-text">"L'export PowerPoint m'a sauvé la mise pour ma présentation au CA. Design professionnel, structure claire — exactement ce qu'il fallait."</div><div class="testi-author"><div class="tav" style="background:var(--red)">ML</div><div><div class="tname">Marc L.</div><div class="trole">Directeur RH, PME technologique</div></div></div></div>
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><div class="testi-text">"Je consulte pour plusieurs entreprises. OrganyAI me permet de livrer des livrables de qualité 10x plus vite. Le bilingue FR/EN est essentiel au Québec."</div><div class="testi-author"><div class="tav" style="background:var(--green)">SC</div><div><div class="tname">Sophie C.</div><div class="trole">Consultante en organisation, Montréal</div></div></div></div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="stag" style="color:var(--yellow);position:relative;z-index:1">Prêt à commencer?</div>
+  <div class="cta-title">Structurez votre<br>équipe <span>aujourd'hui</span></div>
+  <p class="cta-sub">Essai gratuit sans carte de crédit. Annulation à tout moment.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:1rem;position:relative;z-index:1;flex-wrap:wrap">
+    <button class="btn-primary" style="background:var(--white);color:var(--ink)" onclick="showPage('signup')">Créer mon compte gratuit →</button>
+    <button class="btn-ghost" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.5)" onclick="showPage('login')">Déjà un compte?</button>
+  </div>
+  <div class="cta-contacts">
+    <a href="mailto:dawson.aucoin@gmail.com" class="contact-item"><div class="contact-icon">✉️</div>dawson.aucoin@gmail.com</a>
+    <a href="tel:4383674266" class="contact-item"><div class="contact-icon">📞</div>438-367-4266</a>
+    <a href="https://instagram.com/dawson_aucoin._.42" target="_blank" class="contact-item"><div class="contact-icon">📷</div>@dawson_aucoin._.42</a>
+  </div>
+</section>
+<footer>
+  <div class="footer-logo">OrganyAI</div>
+  <div class="footer-copy">© 2026 OrganyAI · Montréal, QC · Propulsé par Claude AI</div>
+</footer>
+</div><!-- /landing -->
+
+<!-- ═══════ PAGE: SIGNUP ═══════ -->
+<div id="page-signup" class="page">
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-logo"><span class="auth-logo-dot"></span>OrganyAI</div>
+    <div class="auth-tagline">Structure organisationnelle par l'IA</div>
+    <div class="auth-title">Créer un compte</div>
+    <div class="auth-sub">Commencez gratuitement — aucune carte requise</div>
+    <div class="auth-error" id="signup-error"></div>
+    <label class="auth-label">Nom complet</label>
+    <input class="auth-input" id="su-name" type="text" placeholder="Dawson Aucoin">
+    <label class="auth-label">Adresse courriel</label>
+    <input class="auth-input" id="su-email" type="email" placeholder="vous@exemple.com">
+    <label class="auth-label">Mot de passe</label>
+    <input class="auth-input" id="su-pass" type="password" placeholder="Minimum 6 caractères">
+    <label class="auth-label" style="margin-bottom:.5rem">Choisissez votre plan</label>
+    <div class="plan-selector" id="plan-selector">
+      <div class="plan-opt selected" id="plan-free" onclick="selectPlan('free')"><div class="plan-opt-name">Gratuit</div><div class="plan-opt-price">$0 / mois</div></div>
+      <div class="plan-opt" id="plan-pro" onclick="selectPlan('pro')"><div class="plan-opt-name">Pro ⚡</div><div class="plan-opt-price">$5 / mois</div></div>
+    </div>
+    <button class="auth-btn" id="signup-btn" onclick="doSignup()">Créer mon compte →</button>
+    <div class="auth-switch">Déjà un compte? <a href="#" onclick="showPage('login');return false">Se connecter</a></div>
+    <div class="auth-switch" style="margin-top:.5rem"><a href="#" onclick="showPage('landing');return false" style="color:rgba(255,255,255,.25)">← Retour à l'accueil</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ PAGE: LOGIN ═══════ -->
+<div id="page-login" class="page">
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-logo"><span class="auth-logo-dot"></span>OrganyAI</div>
+    <div class="auth-tagline">Structure organisationnelle par l'IA</div>
+    <div class="auth-title">Bon retour!</div>
+    <div class="auth-sub">Connectez-vous à votre compte OrganyAI</div>
+    <div class="auth-error" id="login-error"></div>
+    <label class="auth-label">Adresse courriel</label>
+    <input class="auth-input" id="li-email" type="email" placeholder="vous@exemple.com">
+    <label class="auth-label">Mot de passe</label>
+    <input class="auth-input" id="li-pass" type="password" placeholder="Votre mot de passe">
+    <button class="auth-btn" id="login-btn" onclick="doLogin()">Se connecter →</button>
+    <div class="auth-divider"><span>ou essayez sans compte</span></div>
+    <button class="auth-btn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)" onclick="demoLogin()">Démo rapide (sans compte)</button>
+    <div class="auth-switch">Pas encore de compte? <a href="#" onclick="showPage('signup');return false">Créer un compte</a></div>
+    <div class="auth-switch" style="margin-top:.5rem"><a href="#" onclick="showPage('landing');return false" style="color:rgba(255,255,255,.25)">← Retour à l'accueil</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ PAGE: APP ═══════ -->
+<div id="page-app" class="page">
+<div class="app-page">
+
+  <!-- FULL SIDEBAR -->
+  <div class="app-sidebar">
+    <div class="sb-top">
+      <div class="sb-logo"><span class="sb-logo-dot"></span>OrganyAI</div>
+      <div class="sb-user">
+        <div class="sb-avatar" id="sb-avatar">D</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sb-name">Utilisateur</div>
+          <span class="sb-plan-chip sb-chip-free" id="sb-chip">Gratuit</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-nav-label">Application</div>
+      <button class="sb-nav-item sb-active" id="sbnav-generator" onclick="switchAppTab('generator')">
+        <div class="sb-icon">✦</div>
+        <span class="sb-label">Générateur</span>
+      </button>
+      <button class="sb-nav-item" id="sbnav-history" onclick="switchAppTab('history')">
+        <div class="sb-icon">📁</div>
+        <span class="sb-label">Historique</span>
+      </button>
+      <div class="sb-nav-label" style="margin-top:1.25rem">Récent</div>
+    </div>
+
+    <div class="sb-history-list" id="sb-history-list">
+      <div class="sb-empty-hist">Vos structures générées apparaîtront ici.</div>
+    </div>
+
+    <div class="sb-bottom">
+      <button class="sb-upgrade-btn" id="sb-upgrade-btn" onclick="openModal()">
+        <span>⚡</span> Passer au Pro — $5/mois
+      </button>
+      <button class="sb-logout-btn" onclick="doLogout()">
+        <span>↩</span> Déconnexion
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="app-main">
+    <!-- GENERATOR TAB -->
+    <div id="tab-generator">
+      <div class="app-topbar">
+        <div class="app-topbar-title">🏗️ Nouveau département</div>
+        <div class="app-topbar-breadcrumb">OrganyAI <span>›</span> Générateur</div>
+      </div>
+      <div class="gen-wrap">
+        <div class="gen-form-panel">
+          <label class="gf-label">Nom du département *</label>
+          <input class="gf-input" id="g-name" type="text" placeholder="ex: Marketing Digital, RH…">
+          <label class="gf-label">Industrie</label>
+          <input class="gf-input" id="g-industry" type="text" placeholder="ex: Cosmétique, Tech, Finance…">
+          <label class="gf-label">Description *</label>
+          <textarea class="gf-textarea" id="g-desc" placeholder="Décrivez les responsabilités, la taille de l'équipe, les objectifs principaux…"></textarea>
+          <div class="gf-row">
+            <div>
+              <label class="gf-label">Langue</label>
+              <select class="gf-select" id="g-lang"><option value="fr">Français</option><option value="en">English</option></select>
+            </div>
+            <div>
+              <label class="gf-label">Postes</label>
+              <select class="gf-select" id="g-roles"><option value="3">3 postes</option><option value="4">4 postes</option><option value="5">5 postes</option><option value="6">6 postes</option></select>
+            </div>
+          </div>
+          <button class="gen-btn" id="gen-btn" onclick="runGeneration()">
+            <span id="gen-btn-text">Générer la structure →</span>
+          </button>
+          <p class="gen-limit-notice" id="limit-notice">Plan gratuit: <strong id="gens-left">3</strong> génération(s) restante(s). <a href="#" onclick="openModal();return false">Passer au Pro</a></p>
+        </div>
+        <div class="gen-output-panel" id="gen-output">
+          <div class="output-empty">
+            <div class="output-empty-icon">🏗️</div>
+            <div class="output-empty-title">Prêt à générer</div>
+            <div class="output-empty-sub">Remplissez le formulaire à gauche et cliquez sur Générer.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div id="tab-history" style="display:none">
+      <div class="app-topbar">
+        <div class="app-topbar-title">📁 Historique</div>
+        <div class="app-topbar-breadcrumb">OrganyAI <span>›</span> Historique</div>
+      </div>
+      <div style="padding:2rem">
+        <div id="history-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem"></div>
+        <div id="history-empty" style="display:block;text-align:center;padding:4rem 1rem;color:var(--gray)">
+          <div style="font-size:3rem;margin-bottom:.75rem;opacity:.3">📁</div>
+          <div style="font-weight:600;opacity:.5">Aucune structure pour l'instant</div>
+          <div style="font-size:.85rem;margin-top:.4rem;opacity:.4">Créez votre première structure dans le Générateur</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /app -->
+
+<script>
+// ═══ CURSOR ═══
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function ar(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar)})();
+
+// ═══ NAV SCROLL ═══
+window.addEventListener('scroll',()=>{const n=document.getElementById('navbar');if(n)n.classList.toggle('scrolled',window.scrollY>60)});
+
+// ═══ REVEAL ═══
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ═══ STATE ═══
+let currentUser=null;
+let userPlan='free';
+let gensUsed=0;
+const MAX_FREE=3;
+let history=[];
+let lastResult=null;
+let selectedPlanSignup='free';
+
+function getLS(k){try{return JSON.parse(localStorage.getItem(k))}catch{return null}}
+function setLS(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+
+// ═══ PAGE NAVIGATION ═══
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ═══ AUTH ═══
+function selectPlan(p){
+  selectedPlanSignup=p;
+  document.getElementById('plan-free').classList.toggle('selected',p==='free');
+  document.getElementById('plan-pro').classList.toggle('selected',p==='pro');
+}
+
+function showSignupPro(){selectPlan('pro');showPage('signup')}
+
+function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const pass=document.getElementById('su-pass').value;
+  const errEl=document.getElementById('signup-error');
+  errEl.style.display='none';
+  if(!name){errEl.textContent='Veuillez entrer votre nom.';errEl.style.display='block';return}
+  if(!email||!email.includes('@')){errEl.textContent='Veuillez entrer une adresse courriel valide.';errEl.style.display='block';return}
+  if(pass.length<6){errEl.textContent='Le mot de passe doit contenir au moins 6 caractères.';errEl.style.display='block';return}
+  // Check if email already used
+  const existing=getLS('organy_users')||{};
+  if(existing[email]){errEl.textContent='Un compte existe déjà avec cet email.';errEl.style.display='block';return}
+  // Save user
+  existing[email]={name,pass,plan:selectedPlanSignup,gensUsed:0,history:[]};
+  setLS('organy_users',existing);
+  loginUser({email,name,plan:selectedPlanSignup,gensUsed:0,history:[]});
+}
+
+function doLogin(){
+  const email=document.getElementById('li-email').value.trim();
+  const pass=document.getElementById('li-pass').value;
+  const errEl=document.getElementById('login-error');
+  errEl.style.display='none';
+  const users=getLS('organy_users')||{};
+  if(!users[email]){errEl.textContent='Aucun compte trouvé avec cet email.';errEl.style.display='block';return}
+  if(users[email].pass!==pass){errEl.textContent='Mot de passe incorrect.';errEl.style.display='block';return}
+  loginUser({email,...users[email]});
+}
+
+function demoLogin(){
+  loginUser({email:'demo@organy.ai',name:'Utilisateur Démo',plan:'free',gensUsed:0,history:[]});
+}
+
+function loginUser(user){
+  currentUser=user;
+  userPlan=user.plan||'free';
+  gensUsed=user.gensUsed||0;
+  history=user.history||[];
+  updateAppUI();
+  showPage('app');
+}
+
+function doLogout(){
+  // Save state back
+  if(currentUser&&currentUser.email!=='demo@organy.ai'){
+    const users=getLS('organy_users')||{};
+    if(users[currentUser.email]){
+      users[currentUser.email].gensUsed=gensUsed;
+      users[currentUser.email].history=history;
+      setLS('organy_users',users);
+    }
+  }
+  currentUser=null;history=[];gensUsed=0;lastResult=null;
+  document.getElementById('gen-output').innerHTML=`<div class="output-empty"><div class="output-empty-icon">🏗️</div><div class="output-empty-title">Prêt à générer</div><div class="output-empty-sub">Remplissez le formulaire à gauche et cliquez sur Générer.</div></div>`;
+  showPage('landing');
+}
+
+function updateAppUI(){
+  const initials=(currentUser?.name||'U').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  // sidebar elements
+  const sbAvatar=document.getElementById('sb-avatar');
+  const sbName=document.getElementById('sb-name');
+  const sbChip=document.getElementById('sb-chip');
+  const sbUpgrade=document.getElementById('sb-upgrade-btn');
+  if(sbAvatar)sbAvatar.textContent=initials;
+  if(sbName)sbName.textContent=currentUser?.name||'Utilisateur';
+  if(sbChip){sbChip.textContent=userPlan==='pro'?'Pro ⚡':'Gratuit';sbChip.className='sb-plan-chip '+(userPlan==='pro'?'sb-chip-pro':'sb-chip-free')}
+  if(sbUpgrade)sbUpgrade.style.display=userPlan==='pro'?'none':'flex';
+  updateGensLeft();
+  renderHistory();
+}
+
+function updateGensLeft(){
+  const left=Math.max(0,MAX_FREE-gensUsed);
+  const el=document.getElementById('gens-left');
+  if(el)el.textContent=left;
+  const notice=document.getElementById('limit-notice');
+  if(notice)notice.style.display=userPlan==='pro'?'none':'block';
+}
+
+// ═══ APP TABS ═══
+function switchAppTab(tab){
+  document.getElementById('sbnav-generator').classList.toggle('sb-active',tab==='generator');
+  document.getElementById('sbnav-history').classList.toggle('sb-active',tab==='history');
+  document.getElementById('tab-generator').style.display=tab==='generator'?'block':'none';
+  document.getElementById('tab-history').style.display=tab==='history'?'block':'none';
+  if(tab==='history')renderHistoryGrid();
+}
+function newGeneration(){switchAppTab('generator');document.getElementById('g-name').focus()}
+
+// ═══ MODAL ═══
+function openModal(){document.getElementById('upgrade-modal').classList.add('open')}
+function closeModal(){document.getElementById('upgrade-modal').classList.remove('open')}
+function upgradeToPro(){
+  userPlan='pro';
+  if(currentUser){
+    currentUser.plan='pro';
+    const users=getLS('organy_users')||{};
+    if(users[currentUser.email]){users[currentUser.email].plan='pro';setLS('organy_users',users);}
+  }
+  updateAppUI();
+  closeModal();
+  alert('🎉 Bienvenue sur le plan Pro! Générations illimitées activées.');
+}
+
+// ═══ COLOR MAP ═══
+const COLORS={
+  'Direction':{bg:'var(--blue-light)',border:'#C0CAFF',color:'var(--blue)',hdr:'#EEF2FF'},
+  'Director':{bg:'var(--blue-light)',border:'#C0CAFF',color:'var(--blue)',hdr:'#EEF2FF'},
+  'Spécialiste':{bg:'#FFF0EE',border:'#FFCCC8',color:'var(--red)',hdr:'#FFF5F4'},
+  'Specialist':{bg:'#FFF0EE',border:'#FFCCC8',color:'var(--red)',hdr:'#FFF5F4'},
+  'Coordination':{bg:'#FFFAED',border:'#FFE98A',color:'#A07000',hdr:'#FFFDF5'},
+  'Coordinator':{bg:'#FFFAED',border:'#FFE98A',color:'#A07000',hdr:'#FFFDF5'},
+  'Analyste':{bg:'#F0FFF8',border:'#A8F0D0',color:'#007A48',hdr:'#F5FFFA'},
+  'Analyst':{bg:'#F0FFF8',border:'#A8F0D0',color:'#007A48',hdr:'#F5FFFA'},
+};
+function gc(level){return COLORS[level]||COLORS['Coordination']}
+
+// ═══ GENERATION ═══
+async function runGeneration(){
+  const name=document.getElementById('g-name').value.trim();
+  const desc=document.getElementById('g-desc').value.trim();
+  if(!name&&!desc){alert('Veuillez entrer un nom de département ou une description.');return}
+  if(userPlan==='free'&&gensUsed>=MAX_FREE){openModal();return}
+
+  const btn=document.getElementById('gen-btn');
+  btn.disabled=true;
+  document.getElementById('gen-btn-text').textContent='Génération en cours…';
+
+  const msgs=['Analyse du contexte…','Définition de la hiérarchie…','Génération des tâches…','Finalisation de la structure…'];
+  let mi=0;
+  document.getElementById('gen-output').innerHTML=`<div class="output-loading"><div style="font-size:2.5rem">🤖</div><div class="loading-bar"><div class="loading-fill"></div></div><div class="loading-msg" id="lmsg">${msgs[0]}</div></div>`;
+  const intv=setInterval(()=>{mi=(mi+1)%msgs.length;const el=document.getElementById('lmsg');if(el)el.textContent=msgs[mi]},700);
+
+  const lang=document.getElementById('g-lang').value;
+  const roles=document.getElementById('g-roles').value;
+  const industry=document.getElementById('g-industry').value.trim();
+  const isFr=lang==='fr';
+
+  const prompt=isFr?
+`Tu es un expert RH et consultant en organisation. Génère une structure organisationnelle complète.
+Département: ${name||'Non spécifié'} | Industrie: ${industry||'Non spécifiée'} | Description: ${desc||'Non fournie'} | Postes: ${roles}
+Réponds UNIQUEMENT en JSON valide sans markdown:
+{"dept_name":"nom","summary":"mission en une phrase","roles":[{"title":"Titre","level":"Direction|Spécialiste|Coordination|Analyste","reports_to":"supérieur ou null","categories":[{"name":"Catégorie (3 mots)","tasks":["verbe infinitif + tâche","verbe infinitif + tâche","verbe infinitif + tâche","verbe infinitif + tâche","verbe infinitif + tâche"]}]}]}
+Règles: ${roles} postes du plus senior au plus junior, 3 catégories par poste, 5 tâches par catégorie commençant par un verbe à l'infinitif, adapté à l'industrie, répondre en français.`
+:
+`You are an HR expert. Generate a complete organizational structure.
+Department: ${name||'N/A'} | Industry: ${industry||'N/A'} | Description: ${desc||'N/A'} | Roles: ${roles}
+Reply ONLY in valid JSON without markdown:
+{"dept_name":"name","summary":"one sentence mission","roles":[{"title":"Title","level":"Director|Specialist|Coordinator|Analyst","reports_to":"superior or null","categories":[{"name":"Category (3 words)","tasks":["action verb + task","action verb + task","action verb + task","action verb + task","action verb + task"]}]}]}
+Rules: ${roles} roles senior to junior, 3 categories per role, 5 tasks per category starting with action verb, industry-specific, answer in English.`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2500,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await res.json();
+    const raw=data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    clearInterval(intv);
+    gensUsed++;
+    const entry={id:Date.now(),name:parsed.dept_name,date:new Date().toLocaleDateString('fr-CA'),data:parsed,lang};
+    history.unshift(entry);
+    if(history.length>20)history.pop();
+    lastResult=entry;
+    renderOutput(entry);
+    renderHistory();
+    updateGensLeft();
+  }catch(e){
+    clearInterval(intv);
+    document.getElementById('gen-output').innerHTML=`<div class="output-empty"><div class="output-empty-icon">⚠️</div><div class="output-empty-title">Erreur</div><div class="output-empty-sub">La génération a échoué. Vérifiez votre connexion et réessayez.</div></div>`;
+  }
+  btn.disabled=false;
+  document.getElementById('gen-btn-text').textContent='Générer la structure →';
+}
+
+function renderOutput(entry){
+  const d=entry.data;
+  const total=d.roles.reduce((s,r)=>s+r.categories.reduce((s2,c)=>s2+c.tasks.length,0),0);
+
+  // ORG CHART
+  let orgHtml='<div class="org-tree">';
+  d.roles.forEach((r,i)=>{
+    const c=gc(r.level);
+    orgHtml+=`<div class="org-node">`;
+    if(i>0)orgHtml+=`<div class="org-conn-v"></div>`;
+    orgHtml+=`<div class="org-role-box" style="background:${c.bg};color:${c.color};border:1.5px solid ${c.border}">${r.title} <span style="font-size:.72rem;opacity:.6;font-weight:400">— ${r.level}</span></div>`;
+    orgHtml+=`</div>`;
+  });
+  orgHtml+='</div>';
+
+  // ROLES
+  let rolesHtml='';
+  d.roles.forEach(r=>{
+    const c=gc(r.level);
+    rolesHtml+=`<div class="role-block">
+      <div class="role-block-header" style="background:${c.hdr}">
+        <div class="role-block-title" style="color:${c.color}">${r.title}</div>
+        <span class="role-block-level" style="background:${c.bg};color:${c.color};border:1px solid ${c.border}">${r.level}</span>
+      </div>
+      <div class="role-tasks-grid">`;
+    r.categories.forEach((cat,ci)=>{
+      rolesHtml+=`<div class="role-cat" style="${ci===r.categories.length-1?'border-right:none':''}">
+        <div class="role-cat-title" style="color:${c.color};border-color:${c.border}">${cat.name}</div>`;
+      cat.tasks.forEach(t=>{rolesHtml+=`<div class="role-task-item">${t}</div>`});
+      rolesHtml+=`</div>`;
+    });
+    rolesHtml+=`</div></div>`;
+  });
+
+  document.getElementById('gen-output').innerHTML=`
+    <div>
+      <div class="output-header">
+        <div class="output-title-block">
+          <div class="output-dept-name">${d.dept_name}</div>
+          <div class="output-summary">${d.summary}</div>
+        </div>
+        <div class="output-actions">
+          <button class="act-btn" onclick="copyResult(${entry.id})">📋 Copier</button>
+          <button class="act-btn${userPlan==='pro'?'':''}" onclick="${userPlan==='pro'?'alert(\'Export PPTX: fonctionnalité disponible ici!\')':'openModal()'}" style="background:${userPlan==='pro'?'var(--ink)':'var(--blue-light)'};color:${userPlan==='pro'?'var(--white)':'var(--blue)'};border-color:${userPlan==='pro'?'var(--ink)':'#C0CAFF'}">📊 Exporter PPTX ${userPlan!=='pro'?'(Pro)':''}</button>
+        </div>
+      </div>
+      <div class="org-chart-visual">
+        <div class="org-chart-title">📊 Organigramme</div>
+        ${orgHtml}
+      </div>
+      <div class="roles-grid">${rolesHtml}</div>
+      <div style="text-align:center;padding:1.5rem 0;border-top:1px solid var(--border);margin-top:1.25rem">
+        <span style="font-size:.8rem;color:var(--gray)">✦ ${total} tâches générées · ${d.roles.length} postes · Propulsé par Claude AI</span>
+      </div>
+    </div>`;
+}
+
+function copyResult(id){
+  const entry=history.find(h=>h.id===id)||lastResult;
+  if(!entry)return;
+  const d=entry.data;
+  let t=d.dept_name.toUpperCase()+'\n'+d.summary+'\n\n';
+  d.roles.forEach(r=>{
+    t+=r.title.toUpperCase()+' ('+r.level+')\n';
+    r.categories.forEach(c=>{t+='\n  '+c.name.toUpperCase()+'\n';c.tasks.forEach(tk=>t+='  • '+tk+'\n')});
+    t+='\n';
+  });
+  navigator.clipboard.writeText(t).then(()=>{
+    const btns=document.querySelectorAll('.act-btn');
+    btns.forEach(b=>{if(b.textContent.includes('Copier')){b.textContent='✓ Copié!';setTimeout(()=>b.innerHTML='📋 Copier',2000)}});
+  });
+}
+
+function renderHistory(){
+  const list=document.getElementById('sb-history-list');
+  if(!list)return;
+  if(!history.length){list.innerHTML='<div class="sb-empty-hist">Vos structures générées apparaîtront ici.</div>';return}
+  list.innerHTML=history.slice(0,10).map((h,i)=>`
+    <div class="sb-hist-item${i===0?' sb-hist-active':''}" onclick="loadHistory(${h.id})">
+      <div class="sb-hist-name">${h.name}</div>
+      <div class="sb-hist-meta">${h.date} · ${h.data.roles.length} postes</div>
+    </div>`).join('');
+}
+
+function renderHistoryGrid(){
+  const grid=document.getElementById('history-grid');
+  const empty=document.getElementById('history-empty');
+  if(!history.length){grid.style.display='none';empty.style.display='block';return}
+  empty.style.display='none';grid.style.display='grid';
+  grid.innerHTML=history.map(h=>`
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.25rem;cursor:none;transition:all .2s" onclick="loadHistory(${h.id})" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 32px rgba(10,10,15,.08)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:.25rem">${h.name}</div>
+      <div style="font-size:.78rem;color:var(--gray);margin-bottom:.75rem">${h.date} · ${h.data.roles.length} postes · ${h.data.roles.reduce((s,r)=>s+r.categories.reduce((s2,c)=>s2+c.tasks.length,0),0)} tâches</div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap">${h.data.roles.map(r=>{const c=gc(r.level);return`<span style="font-size:.68rem;padding:2px 8px;border-radius:100px;background:${c.bg};color:${c.color};border:1px solid ${c.border}">${r.title}</span>`}).join('')}</div>
+    </div>`).join('');
+}
+
+function loadHistory(id){
+  const entry=history.find(h=>h.id===id);
+  if(!entry)return;
+  switchAppTab('generator');
+  document.getElementById('g-name').value=entry.name;
+  renderOutput(entry);
+  lastResult=entry;
+  document.querySelectorAll('.sb-hist-item').forEach(el=>el.classList.remove('sb-hist-active'));
+  document.querySelectorAll('.sb-hist-item').forEach(el=>{if(el.querySelector('.sb-hist-name')?.textContent===entry.name)el.classList.add('sb-hist-active')});
+}
+
+// ═══ KEYBOARD ENTER ═══
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('page-signup').classList.contains('active'))doSignup();
+  if(e.key==='Enter'&&document.getElementById('page-login').classList.contains('active'))doLogin();
+});
+
+// ═══ CHECK SAVED SESSION ═══
+(function(){
+  const saved=getLS('organy_session');
+  if(saved){const users=getLS('organy_users')||{};if(users[saved.email]){loginUser({email:saved.email,...users[saved.email]})}}
+})();
+</script>
+</body>
+</html>
